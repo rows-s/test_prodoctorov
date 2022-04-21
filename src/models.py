@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from abc import ABC
 from dataclasses import dataclass, field, fields
-from typing import Type, ClassVar, Dict
 
 __all__ = ['Geo', 'Address', 'Company', 'User', 'Todo']
 
@@ -55,8 +54,6 @@ class Address(Model):
     zipcode: str
     geo: Geo
 
-    _sub_models = ('geo', )
-
 
 @dataclass
 class Company(Model):
@@ -76,8 +73,6 @@ class User(Model):
     address: Address
     company: Company
     todos: list = field(default_factory=list)
-
-    _sub_models = ('address', 'company')
 
 
 @dataclass
