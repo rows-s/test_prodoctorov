@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC
 from dataclasses import dataclass, field, fields
-from typing import Type, List, ClassVar
+from typing import Type, ClassVar, Dict
 
 __all__ = ['Geo', 'Address', 'Company', 'User', 'Todo']
 
@@ -10,11 +10,12 @@ __all__ = ['Geo', 'Address', 'Company', 'User', 'Todo']
 @dataclass
 class Model(ABC):
     """Abstract dataclass Model that provides :meth:`from_raw_dict()`"""
-    _sub_models: ClassVar[List[str]] = []
+    _sub_models = {}
+    """{`name`: `type`}"""
 
     @classmethod
     def __post_init__(cls):
-        cls._sub_models = cls._get_sub_models_names()
+        cls._set_sub_models()
 
     @classmethod
     def from_raw_dict(cls, _dict):
@@ -25,29 +26,19 @@ class Model(ABC):
         Submodels' dicts will be converted into corresponding :cls:`Model`
         """
         _dict = _dict.copy()
-        for sub_model_name in cls._sub_models:
-            sub_model = cls.get_field_type(sub_model_name)
-            sub_dict = _dict[sub_model_name]
-            _dict[sub_model_name] = sub_model.from_raw_dict(sub_dict)
+        for name, sub_model in cls._sub_models.values():
+            sub_dict = _dict[name]
+            _dict[name] = sub_model.from_raw_dict(sub_dict)
 
         return cls(**_dict)
 
     @classmethod
-    def _get_sub_models_names(cls) -> List[str]:
-        """returns list of sub models fields' names"""
-        sub_models = []
+    def _set_sub_models(cls):
+        """sets cls._sub_models"""
+        cls._sub_models = {}
         for _field in fields(cls):
             if issubclass(_field.type, Model):
-                sub_models.append(_field.name)
-
-        return sub_models
-
-    @classmethod
-    def get_field_type(cls, name) -> Type[Model]:
-        """returns type of field with given name if exists, otherwise None"""
-        for _field in fields(cls):
-            if _field.name == name:
-                return _field.type
+                cls._sub_models[_field.name] = _field.type
 
 
 @dataclass
