@@ -13,18 +13,17 @@ class Model(ABC):
     __camel_to_snake_fields__ = {}
 
     @classmethod
-    def from_json(cls, _dict):
+    def from_json(cls, json):
         """
         Use it if you want to create a :cls:`Model` with submodels from a whole-raw-dict
         (where submodel also represented as a `dict`).
 
         Submodel's dict will be converted into corresponding :cls:`Model`
         """
-        _dict = cls._migrate_camel_to_snake(_dict)  # copied inside
+        json = cls._migrate_camel_to_snake(json)  # copied inside
         for name, sub_model in cls._get_sub_models().items():
-            sub_dict = _dict[name]
-            _dict[name] = sub_model.from_json(sub_dict)
-        return cls(**_dict)  # noqa
+            json[name] = sub_model.from_json(json[name])
+        return cls(**json)  # noqa
 
     @classmethod
     def _migrate_camel_to_snake(cls, _dict):
