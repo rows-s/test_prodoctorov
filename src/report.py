@@ -1,6 +1,6 @@
 from typing import Dict
 
-from api import MedRatingAPI
+from apis import MedRatingAPI
 from models import User, Todo
 
 
