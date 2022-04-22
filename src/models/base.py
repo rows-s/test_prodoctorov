@@ -20,8 +20,7 @@ class Model(ABC):
 
         Submodel's dict will be converted into corresponding :cls:`Model`
         """
-        _dict = _dict.copy()
-        _dict = cls._migrate_camel_to_snake(_dict)
+        _dict = cls._migrate_camel_to_snake(_dict)  # copied inside
         for name, sub_model in cls._get_sub_models().items():
             sub_dict = _dict[name]
             _dict[name] = sub_model.from_json(sub_dict)
@@ -29,6 +28,7 @@ class Model(ABC):
 
     @classmethod
     def _migrate_camel_to_snake(cls, _dict):
+        _dict = _dict.copy()
         for last_name, new_name in cls.__camel_to_snake_fields__.items():
             if last_name in _dict:
                 _dict[new_name] = _dict.pop(last_name)
