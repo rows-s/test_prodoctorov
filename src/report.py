@@ -22,3 +22,14 @@ class ReportData:
             if user is not None:
                 user.todos.append(Todo.from_raw_dict(todo_dict))
 
+
+def main():
+    report_data = ReportData(mr_api=MedRatingAPI())
+    report_data.set_todos()
+    for user in report_data.users.values():
+        print(user.id, user.todos)
+
+
+if __name__ == '__main__':
+    main()
+
