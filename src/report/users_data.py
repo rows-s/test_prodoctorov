@@ -14,6 +14,7 @@ class UsersData:
 
     def __init__(self, mr_api: MedRatingAPI):
         self._mr_api = mr_api
+        self._users = {}
         self._set_users()._set_todos()
 
     def get_user(self, _id: int):
