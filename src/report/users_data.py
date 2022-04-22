@@ -3,10 +3,10 @@ from typing import Dict
 from ..apis import MedRatingAPI
 from ..models import User, Todo
 
-__all__ = ['UserData']
+__all__ = ['UsersData']
 
 
-class UserData:
+class UsersData:
     """class provides methods to prepare data for report"""
     _users: Dict[str, User]
 
