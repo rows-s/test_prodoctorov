@@ -8,6 +8,8 @@ __all__ = ['UserData']
 
 class UserData:
     """class provides methods to prepare data for report"""
+    _users: Dict[str, User]
+
     def __init__(self, mr_api: MedRatingAPI):
         self._mr_api = mr_api
         self._set_users()._set_todos()
@@ -21,8 +23,9 @@ class UserData:
     def _set_todos(self):
         """sets todos into corresponding users"""
         for todo_dict in self._mr_api.get_todos():
-            user = self.users.get(todo_dict.get('userId'))
+            user = self._users.get(todo_dict.get('userId'))
             if user is not None:
                 user.todos.append(Todo.from_json(todo_dict))
+        return self
 
 
