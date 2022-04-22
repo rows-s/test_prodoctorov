@@ -5,7 +5,7 @@ from src.apis import MedRatingAPI
 def main():
     mr_api = MedRatingAPI()
     for user in UsersData(mr_api):
-        print(user.id, user.todos)
+        print(user.get_report())
 
 
 if __name__ == '__main__':
