@@ -1,7 +1,8 @@
 from typing import Dict
 
 from ..apis import MedRatingAPI
-from ..models import User, Todo
+from ..models import User
+from ..models.utils import try_user_from_json, try_todo_from_json
 
 __all__ = ['UsersData']
 
@@ -22,16 +23,22 @@ class UsersData:
         self._users[user.id] = user
 
     def _set_users(self):
-        """returns dict {`user_id`: :cls:`User`} form MedRatingAPI"""
-        self._users = {user_dict['id']: User.from_json(user_dict)
-                       for user_dict in self._mr_api.get_users()}
+        """sets self._users dict form MedRatingAPI"""
+        for user_json in self._mr_api.get_users():
+            user = try_user_from_json(user_json)
+            if user is None:
+                continue
+            self.add_user(user)
 
         return self
 
     def _set_todos(self):
         """sets todos into corresponding users"""
         for todo_dict in self._mr_api.get_todos():
-            todo = Todo.from_json(todo_dict)
+            todo = try_todo_from_json(todo_dict)
+            if todo is None:
+                continue
+
             user = self.get_user(todo.user_id)
             if user is not None:
                 user.todos.append(todo)
