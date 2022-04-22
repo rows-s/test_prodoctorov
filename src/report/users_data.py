@@ -8,14 +8,18 @@ __all__ = ['UsersData']
 
 class UsersData:
     """class provides methods to prepare data for report"""
-    _users: Dict[str, User]
+    _users: Dict[int, User]
+    '{`user_id`: `User`}'
 
     def __init__(self, mr_api: MedRatingAPI):
         self._mr_api = mr_api
         self._set_users()._set_todos()
 
-    def get_user(self, _id):
+    def get_user(self, _id: int):
         return self._users.get(_id)
+
+    def add_user(self, user: User):
+        self._users[user.id] = user
 
     def _set_users(self):
         """returns dict {`user_id`: :cls:`User`} form MedRatingAPI"""
@@ -36,6 +40,3 @@ class UsersData:
 
     def __iter__(self):
         return iter(self._users.values())
-
-
-
