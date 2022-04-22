@@ -1,10 +1,12 @@
 from typing import Dict
 
-from apis import MedRatingAPI
-from models import User, Todo
+from ..apis import MedRatingAPI
+from ..models import User, Todo
+
+__all__ = ['UserData']
 
 
-class ReportData:
+class UserData:
     """class provides methods to prepare data for report"""
     def __init__(self, mr_api: MedRatingAPI):
         self._mr_api = mr_api
@@ -22,14 +24,3 @@ class ReportData:
             user = self.users.get(todo_dict.get('userId'))
             if user is not None:
                 user.todos.append(Todo.from_json(todo_dict))
-
-
-def main():
-    report_data = ReportData(mr_api=MedRatingAPI())
-    for user in report_data.users.values():
-        print(user.id, user.todos)
-
-
-if __name__ == '__main__':
-    main()
-
