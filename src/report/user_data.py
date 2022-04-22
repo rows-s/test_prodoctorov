@@ -10,13 +10,13 @@ class UserData:
     """class provides methods to prepare data for report"""
     def __init__(self, mr_api: MedRatingAPI):
         self._mr_api = mr_api
-        self.users = self._get_users()
-        self._set_todos()
+        self._set_users()._set_todos()
 
-    def _get_users(self) -> Dict[str, User]:
+    def _set_users(self):
         """returns dict {`user_id`: :cls:`User`} form MedRatingAPI"""
-        return {user_dict['id']: User.from_json(user_dict)
-                for user_dict in self._mr_api.get_users()}
+        self.users = {user_dict['id']: User.from_json(user_dict)
+                       for user_dict in self._mr_api.get_users()}
+        return self
 
     def _set_todos(self):
         """sets todos into corresponding users"""
