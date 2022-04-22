@@ -35,8 +35,8 @@ class UsersData:
 
     def _set_todos(self):
         """sets todos into corresponding users"""
-        for todo_dict in self._mr_api.get_todos():
-            todo = try_todo_from_json(todo_dict)
+        for todo_json in self._mr_api.get_todos():
+            todo = ensure_from_json(Todo, todo_json)
             if todo is None:
                 continue
 
