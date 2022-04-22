@@ -1,32 +1,35 @@
 from typing import Dict
 
 from ..apis import MedRatingAPI
-from ..models import User
-from ..models.utils import try_user_from_json, try_todo_from_json
+from ..models import Todo
+from ..models.utils import ensure_from_json
+from .user import UserReport
 
 __all__ = ['UsersData']
 
 
 class UsersData:
     """class provides methods to prepare data for report"""
-    _users: Dict[int, User]
+    _users: Dict[int, UserReport]
     '{`user_id`: `User`}'
 
     def __init__(self, mr_api: MedRatingAPI):
         self._mr_api = mr_api
         self._users = {}
+
+        self._user_cls = UserReport
         self._set_users()._set_todos()
 
     def get_user(self, _id: int):
         return self._users.get(_id)
 
-    def add_user(self, user: User):
+    def add_user(self, user: UserReport):
         self._users[user.id] = user
 
     def _set_users(self):
         """sets self._users dict form MedRatingAPI"""
         for user_json in self._mr_api.get_users():
-            user = try_user_from_json(user_json)
+            user = ensure_from_json(UserReport, user_json)
             if user is None:
                 continue
             self.add_user(user)
