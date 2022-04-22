@@ -26,7 +26,6 @@ class ReportData:
 
 def main():
     report_data = ReportData(mr_api=MedRatingAPI())
-    report_data.set_todos()
     for user in report_data.users.values():
         print(user.id, user.todos)
 
