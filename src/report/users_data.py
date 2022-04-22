@@ -14,18 +14,28 @@ class UsersData:
         self._mr_api = mr_api
         self._set_users()._set_todos()
 
+    def get_user(self, _id):
+        return self._users.get(_id)
+
     def _set_users(self):
         """returns dict {`user_id`: :cls:`User`} form MedRatingAPI"""
-        self.users = {user_dict['id']: User.from_json(user_dict)
+        self._users = {user_dict['id']: User.from_json(user_dict)
                        for user_dict in self._mr_api.get_users()}
+
         return self
 
     def _set_todos(self):
         """sets todos into corresponding users"""
         for todo_dict in self._mr_api.get_todos():
-            user = self._users.get(todo_dict.get('userId'))
+            todo = Todo.from_json(todo_dict)
+            user = self.get_user(todo.user_id)
             if user is not None:
-                user.todos.append(Todo.from_json(todo_dict))
+                user.todos.append(todo)
+
         return self
+
+    def __iter__(self):
+        return iter(self._users.values())
+
 
 
