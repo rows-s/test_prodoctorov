@@ -1,7 +1,7 @@
 from typing import Dict
 
 from api import MedRatingAPI
-from models import User
+from models import User, Todo
 
 
 class ReportData:
@@ -17,8 +17,8 @@ class ReportData:
 
     def set_todos(self):
         """sets todos into users"""
-        for todo in self._mr_api.get_todos():
-            user = self.users.get(todo.get('userId'))
+        for todo_dict in self._mr_api.get_todos():
+            user = self.users.get(todo_dict.get('userId'))
             if user is not None:
-                user.todos.append(todo)
+                user.todos.append(Todo.from_raw_dict(todo_dict))
 
