@@ -58,6 +58,13 @@ class Company(Model):
     catch_phrase: str
     bs: str
 
+    @classmethod
+    def from_raw_dict(cls, _dict):
+        _dict = _dict.copy()
+        if 'catchPhrase' in _dict:
+            _dict['catch_phrase'] = _dict.pop('catchPhrase')
+        return super().from_raw_dict(_dict)
+
 
 @dataclass
 class User(Model):
@@ -78,3 +85,10 @@ class Todo(Model):
     user_id: int
     title: str
     completed: bool
+
+    @classmethod
+    def from_raw_dict(cls, _dict):
+        _dict = _dict.copy()
+        if 'userId' in _dict:
+            _dict['user_id'] = _dict.pop('userId')
+        return super().from_raw_dict(_dict)
