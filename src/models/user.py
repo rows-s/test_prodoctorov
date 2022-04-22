@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 
+from .todo import Todo
 from .base import Model
 from .company import Company
 from .address import Address
@@ -17,4 +18,7 @@ class User(Model):
     website: str
     address: Address
     company: Company
-    todos: list = field(default_factory=list)
+    todos: list = field(default_factory=list, init=False)
+
+    def add_todo(self, todo: Todo):
+        self.todos.append(todo)

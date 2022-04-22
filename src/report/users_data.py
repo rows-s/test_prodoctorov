@@ -42,7 +42,7 @@ class UsersData:
 
             user = self.get_user(todo.user_id)
             if user is not None:
-                user.todos.append(todo)
+                user.add_todo(todo)
 
         return self
 
