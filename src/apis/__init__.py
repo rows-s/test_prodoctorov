@@ -1,2 +1,2 @@
-from base import *
-from med_rating import *
+from .base import *
+from .med_rating import *
