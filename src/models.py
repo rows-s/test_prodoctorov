@@ -1,20 +1,16 @@
-from __future__ import annotations
-
 from abc import ABC
 from dataclasses import dataclass, field, fields
+from functools import lru_cache
+from contextlib import suppress
 
-__all__ = ['Geo', 'Address', 'Company', 'User', 'Todo']
+__all__ = ['Model', 'Geo', 'Address', 'Company', 'User', 'Todo']
+
+from typing import Dict, Type
 
 
 @dataclass
 class Model(ABC):
     """Abstract dataclass Model that provides :meth:`from_raw_dict()`"""
-    _sub_models = {}
-    """{`name`: `type`}"""
-
-    @classmethod
-    def __post_init__(cls):
-        cls._set_sub_models()
 
     @classmethod
     def from_raw_dict(cls, _dict):
@@ -25,19 +21,20 @@ class Model(ABC):
         Submodels' dicts will be converted into corresponding :cls:`Model`
         """
         _dict = _dict.copy()
-        for name, sub_model in cls._sub_models.values():
+        for name, sub_model in cls._get_sub_models().items():
             sub_dict = _dict[name]
             _dict[name] = sub_model.from_raw_dict(sub_dict)
-
-        return cls(**_dict)
+        return cls(**_dict)  # noqa
 
     @classmethod
-    def _set_sub_models(cls):
-        """sets cls._sub_models"""
-        cls._sub_models = {}
+    @lru_cache(maxsize=None)  # one cache for one class
+    def _get_sub_models(cls) -> Dict[str, Type['Model']]:
+        sub_models = {}
         for _field in fields(cls):
-            if issubclass(_field.type, Model):
-                cls._sub_models[_field.name] = _field.type
+            with suppress(TypeError):  # suppress "clas is not a type" error
+                if issubclass(_field.type, Model):
+                    sub_models[_field.name] = _field.type
+        return sub_models
 
 
 @dataclass
