@@ -5,10 +5,10 @@ from ..models import Todo
 from ..models.utils import ensure_from_lazy_json
 from .user import UserReport
 
-__all__ = ['UsersData']
+__all__ = ['UsersStream']
 
 
-class UsersData:
+class UsersStream:
     """class provides methods to prepare data for report"""
     _users: Dict[int, UserReport]
     '{`user_id`: `User`}'
