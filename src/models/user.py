@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import List
 
 from .todo import Todo
 from .base import Model
@@ -18,7 +19,7 @@ class User(Model):
     website: str
     address: Address
     company: Company
-    todos: list = field(default_factory=list, init=False)
+    todos: List[Todo] = field(default_factory=list, init=False)
 
     def add_todo(self, todo: Todo):
         self.todos.append(todo)
