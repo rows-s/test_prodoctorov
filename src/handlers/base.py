@@ -6,7 +6,7 @@ from ..report import Report
 
 
 class Handler(ABC):
-    """Base handler class"""
+    """Base report handler class"""
 
     @abstractmethod
     def handle_report(self, report: Report):
