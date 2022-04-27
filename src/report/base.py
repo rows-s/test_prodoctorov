@@ -18,5 +18,5 @@ class Report(ABC):
         """returns string that represents description"""
 
     @abstractmethod
-    def get_report(self) -> str:
+    def get_msg(self) -> str:
         """returns string that represents report"""
