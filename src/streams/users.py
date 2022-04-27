@@ -1,4 +1,4 @@
-from typing import Dict, Type, Iterator
+from typing import Dict, Type, Iterator, Optional
 
 from .base import Stream
 from ..apis import MedRatingAPI
@@ -18,11 +18,11 @@ class UsersStream(Stream):
 
         self._set_users()._set_todos()
 
-    def get_user(self, id_: int):
+    def get_user(self, id_: int) -> Optional[User]:
         """returns :class:`User` with provided :var:`id_`"""
         return self._users.get(id_)
 
-    def add_user(self, user: User):
+    def add_user(self, user: User) -> None:
         """adds :var:`user` to the stream"""
         self._users[user.id] = user
 
