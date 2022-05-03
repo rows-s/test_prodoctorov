@@ -3,13 +3,13 @@ from dataclasses import dataclass
 from functools import cache
 from typing import Type, TypeVar
 
-__all__ = ['JSONSupport']
+__all__ = ['JSONModel']
 
-_T = TypeVar('_T', bound='JSONSupport')
+_T = TypeVar('_T', bound='JSONModel')
 
 
 @dataclass
-class JSONSupport(ABC):
+class JSONModel(ABC):
     __camel_to_snake_fields__ = {}
 
     @classmethod
@@ -20,6 +20,7 @@ class JSONSupport(ABC):
 
     @classmethod
     def from_json(cls: Type[_T], json: dict) -> _T:
+        """creates instance from provided json. Keys are migrated from camel to snake naming"""
         json = cls._migrate_to_snake(json.copy())
         return cls(**json)  # noqa
 
@@ -27,7 +28,7 @@ class JSONSupport(ABC):
     def _migrate_to_snake(cls, json: dict) -> dict:
         """
         changes all `dict_`'s keys that are represented in `cls.__camel_to_snake_fields__ to according values.
-        returns new :cls:`dict`
+        returns new :class:`dict`
         """
         for camel in cls.__camel_to_snake_fields__:
             cls._migrate_field(camel, cls._get_snake(camel), json=json)

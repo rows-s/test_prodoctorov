@@ -63,7 +63,7 @@ class UserReport(User, Report):
 
     def get_msg(self, sep: str = '\n'):
         """
-        returns title, description. done_todos_detail & un_done_todos_detail if they exist.
+        returns title, description. done_todos_detail & undone_todos_detail if they exist.
         All separated with new line
         """
         report_parts = [self.get_title(), self.get_description()]

@@ -4,15 +4,15 @@ from dataclasses import dataclass, fields
 from functools import cache
 from typing import TypeVar, Type, Dict
 
-from .json import JSONSupport
+from .json import JSONModel
 
-_T = TypeVar('_T', bound='LazyJSON')
+__all__ = ['LazyJSONModel']
 
-__all__ = ['LazyJSON']
+_T = TypeVar('_T', bound='LazyJSONModel')
 
 
 @dataclass
-class LazyJSON(JSONSupport, ABC):
+class LazyJSONModel(JSONModel, ABC):
     @classmethod
     def from_lazy_json(cls: Type[_T], json: dict) -> _T:
         json = json.copy()
@@ -23,11 +23,11 @@ class LazyJSON(JSONSupport, ABC):
 
     @classmethod
     @cache  # one cache for one class
-    def _get_sub_models(cls) -> Dict[str, Type['LazyJSON']]:
+    def _get_sub_models(cls) -> Dict[str, Type['LazyJSONModel']]:
         """returns sub models {`field_name`: `type`} dict. result is cached for each class"""
         sub_models = {}
         for _field in fields(cls):
             with suppress(TypeError):  # suppress "__cls is not a type" error
-                if issubclass(_field.type, LazyJSON):
+                if issubclass(_field.type, LazyJSONModel):
                     sub_models[_field.name] = _field.type
         return sub_models
